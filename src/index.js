@@ -23,6 +23,7 @@ const store = new Store({defaults});
 const { ipcMain } = require('electron')
 
 const chooseCountryWindow = require('./chooseCountryWindow')
+const showMoreTable = require('./showMoreTable')
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -64,6 +65,7 @@ async function updateData () {
         { label: 'Critical', sublabel: 'critical', type: "checkbox", checked: store.get('config.critical'), click: onCheckbox},
       ]},
     { label: 'Choose Country', click: () => chooseCountryWindow() },
+    { label: 'Show More', click: () => showMoreTable()},
     { label: 'Quit', role: 'quit' }
   ])
   tray.setContextMenu(contextMenu)
