@@ -27,7 +27,15 @@ function createRadio(name) {
 async function fetchData() {
     const data = await covid.countries()
 
-    for (let country of data) {
+    const sortedData = data.sort((a,b) => {
+        return (a.country < b.country) ? -1 : (a.country > b.country) ? 1 : 0;
+    })
+
+    console.log(data)
+    console.log('--------------')
+    console.log(sortedData)
+
+    for (let country of sortedData) {
         const countryName = country.country
 
         createRadio(countryName)
