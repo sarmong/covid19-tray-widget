@@ -1,0 +1,29 @@
+h1 {
+    margin-left: 10px;
+}
+
+form#countrySelector {
+    margin-top: 20px;
+}
+
+div.radio-container {
+    padding: 5px 10px;
+    font-family: Helvetica;
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+label {
+    vertical-align: middle;
+}
+
+#search {
+    margin-left: 10px;
+    width: 300px;
+    outline: none;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+}
