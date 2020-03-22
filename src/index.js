@@ -2,6 +2,10 @@ const { app, Menu, Tray } = require('electron')
 const path = require('path')
 const covid = require('novelcovid')
 
+const Store = require('electron-store');
+const store = new Store();
+
+
 const { ipcMain } = require('electron')
 
 const chooseCountryWindow = require('./chooseCountryWindow')
@@ -32,6 +36,8 @@ app.on('ready', () => {
   }
 
   async function fetchData(country) {
+    store.set('country', country)
+
     let data
     if (country === 'Global') {
       data = await covid.all()
@@ -46,7 +52,11 @@ app.on('ready', () => {
     fetchData(arg)
   })
 
-  fetchData('Global')
+  if (!store.get('country')) {
+    fetchData('Global')
+  } else {
+    fetchData(store.get('country'))
+  }
 })
 
 app.on('window-all-closed', () => {
