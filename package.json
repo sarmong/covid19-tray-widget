@@ -1,7 +1,7 @@
 {
   "name": "covid19-tray-data",
   "productName": "covid19-tray-data",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
