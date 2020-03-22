@@ -15,7 +15,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 let tray = null
 app.on('ready', () => {
-
+  app.dock.hide()
   tray = new Tray(path.join(__dirname, 'icon.png'))
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Choose Country', click: () => chooseCountryWindow() },
