@@ -31,15 +31,10 @@ async function fetchData() {
         return (a.country < b.country) ? -1 : (a.country > b.country) ? 1 : 0;
     })
 
-    console.log(data)
-    console.log('--------------')
-    console.log(sortedData)
-
+    createRadio("Global")
     for (let country of sortedData) {
         const countryName = country.country
-
         createRadio(countryName)
-
     }
 }
 

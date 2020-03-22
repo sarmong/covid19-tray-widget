@@ -33,7 +33,7 @@ app.on('ready', () => {
 
   async function fetchData(country) {
     let data
-    if (country === 'all') {
+    if (country === 'Global') {
       data = await covid.all()
     } else {
       const allCountries = await covid.countries()
@@ -46,7 +46,7 @@ app.on('ready', () => {
     fetchData(arg)
   })
 
-  fetchData('all')
+  fetchData('Global')
 })
 
 app.on('window-all-closed', () => {
