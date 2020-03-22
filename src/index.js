@@ -4,7 +4,6 @@ const covid = require('novelcovid')
 
 const { ipcMain } = require('electron')
 
-
 const chooseCountryWindow = require('./chooseCountryWindow')
 
 
@@ -22,9 +21,16 @@ app.on('ready', () => {
     { label: 'Choose Country', click: () => chooseCountryWindow() },
     { label: 'Quit', role: 'quit' }
   ])
-  tray.setToolTip('This is my application')
-
   tray.setContextMenu(contextMenu)
+
+  tray.setToolTip('Click to see the menu')
+
+
+  function formatData(data) {
+    const todayCases = data.todayCases ? " (" + data.todayCases + "🔺" + ")" : "   "
+    return "🦠" + data.cases + todayCases  + "💀" + data.deaths
+  }
+
   async function fetchData(country) {
     let data
     if (country === 'all') {
@@ -33,7 +39,7 @@ app.on('ready', () => {
       const allCountries = await covid.countries()
       data = allCountries.find(el => el.country === country)
     }
-    tray.setTitle(data.cases.toFixed())
+    tray.setTitle(formatData(data))
   }
 
   ipcMain.on('country-updated', (event, arg) => {
