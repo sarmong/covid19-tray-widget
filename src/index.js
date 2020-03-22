@@ -18,7 +18,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 let tray = null
 
-async function getLastUpdatedDate () {
+async function updateData () {
   const data = await covid.all()
   const date = new Date(data.updated)
 
@@ -29,7 +29,7 @@ async function getLastUpdatedDate () {
   const string = pad(date.getHours()) + ":" + pad(date.getMinutes()) + " " + pad(date.getDate()) + "." + pad(date.getMonth()) + "." + date.getFullYear().toFixed().slice(2)
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Update', click: () => getLastUpdatedDate()},
+    { label: 'Update', click: () => updateData()},
     { label: 'Latest update: ' + string},
     { label: 'Choose Country', click: () => chooseCountryWindow() },
     { label: 'Quit', role: 'quit' }
@@ -68,7 +68,8 @@ async function fetchData(country) {
 app.on('ready', () => {
   app.dock.hide()
   tray = new Tray(path.join(__dirname, 'icon.png'))
-  getLastUpdatedDate()
+  updateData()
+  setInterval(updateData, 10*60*1000)
 
   tray.setToolTip('Click to see the menu')
 
