@@ -14,7 +14,7 @@ const chooseCountryWindow = () => {
 
     mainWindow.loadFile(path.join(__dirname, 'chooseCountryWindow.html'));
 
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 
 
 };
