@@ -27,7 +27,7 @@ app.on('ready', () => {
 
 
   function formatData(data) {
-    const todayCases = data.todayCases ? " (" + data.todayCases + "🔺" + ")" : "   "
+    const todayCases = data.todayCases !== undefined ? " (" + data.todayCases + "🔺" + ")" : "   "
     return "🦠" + data.cases + todayCases  + "💀" + data.deaths
   }
 
