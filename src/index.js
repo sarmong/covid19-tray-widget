@@ -16,47 +16,68 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
   app.quit();
 }
 
-
 let tray = null
-app.on('ready', () => {
-  app.dock.hide()
-  tray = new Tray(path.join(__dirname, 'icon.png'))
+
+async function getLastUpdatedDate () {
+  const data = await covid.all()
+  const date = new Date(data.updated)
+
+  function pad(symb) {
+    return String(symb).length == 1 ? '0' + symb : symb;
+  }
+
+  const string = pad(date.getHours()) + ":" + pad(date.getMinutes()) + " " + pad(date.getDate()) + "." + pad(date.getMonth()) + "." + date.getFullYear().toFixed().slice(2)
+
   const contextMenu = Menu.buildFromTemplate([
+    { label: 'Update', click: () => getLastUpdatedDate()},
+    { label: 'Latest update: ' + string},
     { label: 'Choose Country', click: () => chooseCountryWindow() },
     { label: 'Quit', role: 'quit' }
   ])
   tray.setContextMenu(contextMenu)
+}
 
-  tray.setToolTip('Click to see the menu')
+async function fetchData(country) {
+  if (!country) {
+    if (!store.get('country')) {
+      country = 'Global'
+      store.set('country', country)
+    } else {
+      country = store.get('country')
+    }
+  } else {
+    store.set('country', country)
+  }
 
+  let data
+  if (country === 'Global') {
+    data = await covid.all()
+  } else {
+    const allCountries = await covid.countries()
+    data = allCountries.find(el => el.country === country)
+  }
 
   function formatData(data) {
     const todayCases = data.todayCases !== undefined ? " (" + data.todayCases + "🔺" + ")" : "   "
     return "🦠" + data.cases + todayCases  + "💀" + data.deaths
   }
 
-  async function fetchData(country) {
-    store.set('country', country)
+  tray.setTitle(formatData(data))
+}
 
-    let data
-    if (country === 'Global') {
-      data = await covid.all()
-    } else {
-      const allCountries = await covid.countries()
-      data = allCountries.find(el => el.country === country)
-    }
-    tray.setTitle(formatData(data))
-  }
+app.on('ready', () => {
+  app.dock.hide()
+  tray = new Tray(path.join(__dirname, 'icon.png'))
+  getLastUpdatedDate()
+
+  tray.setToolTip('Click to see the menu')
+
 
   ipcMain.on('country-updated', (event, arg) => {
     fetchData(arg)
   })
 
-  if (!store.get('country')) {
-    fetchData('Global')
-  } else {
-    fetchData(store.get('country'))
-  }
+    fetchData()
 })
 
 app.on('window-all-closed', () => {
