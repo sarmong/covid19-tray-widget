@@ -3,6 +3,8 @@ const { ipcRenderer } = require('electron')
 
 const form = document.getElementById("countrySelector")
 
+let currentCountry
+
 const search = document.getElementById("search")
 search.oninput = function(e) {
     const filter = e.target.value.toLowerCase()
@@ -28,6 +30,10 @@ function createRadio(name) {
     input.setAttribute("name", "country")
     input.setAttribute("value", name)
 
+    if (name === currentCountry) {
+        input.setAttribute("checked", true)
+    }
+
     input.addEventListener('change', (e) => {
         ipcRenderer.send('country-updated', e.target.value)
     })
@@ -43,6 +49,10 @@ function createRadio(name) {
 }
 
 async function fetchData() {
+    ipcRenderer.send('ready', [])
+    ipcRenderer.on("currentCountry", (e, arg) => {
+        currentCountry = arg
+    })
     const data = await covid.countries()
 
     const sortedData = data.sort((a,b) => {

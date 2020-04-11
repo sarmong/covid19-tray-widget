@@ -1,6 +1,9 @@
 const { BrowserWindow } = require('electron')
 const path = require('path')
 
+const { ipcMain } = require('electron')
+
+const store = require('./store')
 
 const chooseCountryWindow = () => {
 
@@ -16,6 +19,10 @@ const chooseCountryWindow = () => {
 
     //mainWindow.webContents.openDevTools();
 
+    ipcMain.on('ready', (e) => {
+        const currentCountry = store.get('country')
+        e.reply('currentCountry', currentCountry)
+    })
 
 };
 
